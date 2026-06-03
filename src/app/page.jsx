@@ -66,12 +66,12 @@ export default function HomePage() {
   ];
 
   const quickAccess = [
-    { title: "Dashboard", href: "/dashboard", desc: "Review real-time operations telemetry.", icon: LayoutDashboard },
-    { title: "Products", href: "/products", desc: "Browse catalog and select quantities.", icon: ShoppingBag },
-    { title: "Quotation", href: "/quotation", desc: "Calculate and output sales estimates.", icon: FileCheck },
-    { title: "Orders", href: "/orders", desc: "Supervise transaction records.", icon: ClipboardList },
-    { title: "Profile", href: "/profile", desc: "View account role parameters.", icon: User },
-    { title: "Reports", href: "/dashboard", desc: "Monitor stock distribution graphs.", icon: BarChart }
+    { title: "Dashboard", href: "/dashboard", desc: "View inventory performance, orders and system metrics.", icon: LayoutDashboard, action: "Open Dashboard" },
+    { title: "Products", href: "/products", desc: "Manage products, SKUs, pricing and stock levels.", icon: ShoppingBag, action: "Open Products" },
+    { title: "Quotations", href: "/quotation", desc: "Generate quotations using unit conversion and pricing.", icon: FileCheck, action: "Open Quotations" },
+    { title: "Orders", href: "/orders", desc: "Track customer orders and approval workflow.", icon: ClipboardList, action: "Open Orders" },
+    { title: "Profile", href: "/profile", desc: "Manage account settings and role permissions.", icon: User, action: "Open Profile" },
+    { title: "Analytics", href: "/dashboard", desc: "Monitor inventory trends and operational reports.", icon: BarChart, action: "Open Analytics" }
   ];
 
   const benefits = [
@@ -290,23 +290,26 @@ export default function HomePage() {
             const Icon = link.icon;
             return (
               <Link key={idx} href={link.href} className="group block select-none">
-                <Card className="h-full hover:border-[#38BDF8]/30 hover:shadow-md hover:shadow-[#38BDF8]/5 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between border-slate-900/60 bg-[#090d23]/30">
-                  <div className="space-y-4">
-                    <div className="p-2.5 bg-slate-900 text-slate-400 group-hover:text-[#6D5DFB] border border-slate-800 rounded-xl w-fit group-hover:scale-105 transition-transform duration-300">
-                      <Icon className="h-4.5 w-4.5 shrink-0" />
+                <div className="h-[190px] bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm hover:shadow-xl hover:translate-y-[-6px] hover:border-[#6D5DFB] transition-all duration-300 flex flex-col justify-between relative overflow-hidden">
+                  <div className="space-y-2">
+                    {/* Icon section */}
+                    <div className="text-slate-400 group-hover:text-[#6D5DFB] transition-colors duration-200">
+                      <Icon className="h-5 w-5 shrink-0" />
                     </div>
-                    <h3 className="text-sm font-extrabold text-white group-hover:text-[#38BDF8] transition-colors duration-200">
+                    {/* Typography */}
+                    <h3 className="text-xl font-semibold text-slate-900 leading-snug">
                       {link.title}
                     </h3>
-                    <p className="text-xs text-[#94A3B8] leading-relaxed font-medium">
+                    <p className="text-sm text-gray-500 max-w-full leading-snug font-medium line-clamp-2">
                       {link.desc}
                     </p>
                   </div>
-                  <div className="flex items-center space-x-1 text-xs font-bold text-[#6D5DFB] mt-5 group-hover:underline">
-                    <span>Enter Module</span>
-                    <ChevronRight className="h-4 w-4 transform group-hover:translate-x-0.5 transition-transform" />
+                  {/* Action Link */}
+                  <div className="flex items-center space-x-1 text-xs font-bold text-[#6D5DFB] tracking-wide uppercase">
+                    <span>{link.action}</span>
+                    <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1.5 transition-transform duration-200" />
                   </div>
-                </Card>
+                </div>
               </Link>
             );
           })}
