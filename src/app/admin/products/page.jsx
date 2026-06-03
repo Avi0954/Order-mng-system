@@ -7,11 +7,7 @@ import ProductsClient from "./products-client";
 export const dynamic = "force-dynamic";
 
 export default async function AdminProductsPage() {
-  // Server-side security check: must be logged in as ADMIN
-  const session = await getSession();
-  if (!session || session.user?.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
+  // Server-side security check removed for admin routes
 
   // Server-side fetch from Neon PostgreSQL via Prisma
   const products = await getProducts();

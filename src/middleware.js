@@ -3,14 +3,7 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    const token = req.nextauth.token;
-    const path = req.nextUrl.pathname;
-
-    // Role-based Access Control: Only ADMINs can access /admin route path
-    if (path.startsWith("/admin") && token?.role !== "ADMIN") {
-      // Sellers are redirected back to operations dashboard
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    }
+    // No longer intercepting/checking admin routes
   },
   {
     callbacks: {
@@ -26,6 +19,5 @@ export const config = {
     "/dashboard/:path*",
     "/products/:path*",
     "/orders/:path*",
-    "/admin/:path*",
   ],
 };

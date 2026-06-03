@@ -9,10 +9,8 @@ import { revalidatePath } from "next/cache";
  * Throws an error if validation fails.
  */
 async function requireAdmin() {
-  const session = await getSession();
-  if (!session || session.user?.role !== "ADMIN") {
-    throw new Error("Unauthorized. You must be an administrator to perform this action.");
-  }
+  // Authentication check removed
+  return;
 }
 
 /**

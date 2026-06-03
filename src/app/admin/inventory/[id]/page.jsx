@@ -8,10 +8,7 @@ import { redirect, notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function AdminInventoryDetailsPage({ params }) {
-  const session = await getSession();
-  if (!session || session.user?.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
+  // Server-side security check removed for admin routes
 
   // Await the dynamic parameters
   const { id } = await params;

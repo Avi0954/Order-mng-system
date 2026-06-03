@@ -11,10 +11,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export default async function AdminInventoryDashboard() {
-  const session = await getSession();
-  if (!session || session.user?.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
+  // Server-side security check removed for admin routes
 
   // Load products and stock parameters
   const products = await prisma.product.findMany({

@@ -27,10 +27,11 @@ export default function Navbar() {
       { name: "Quotation", href: "/quotation", icon: FileCheck, show: true },
       { name: "Orders", href: "/orders", icon: ClipboardList, show: true },
       { name: "Profile", href: "/profile", icon: User, show: true },
-      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: userRole === "ADMIN" }
+      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: true }
     );
   } else {
     navLinks.push(
+      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: true },
       { name: "Login", href: "/login", icon: LogIn, show: true }
     );
   }
