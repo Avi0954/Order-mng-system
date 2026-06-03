@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowLeft, Users, ShieldAlert, CheckCircle2 } from "lucide-react";
+import Table, { TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/Table";
+import Badge from "@/components/ui/Badge";
 
 export const dynamic = "force-dynamic";
 
@@ -58,67 +60,59 @@ export default async function DebugUsersPage() {
 
         {/* User Listing Table */}
         {!errorMsg && (
-          <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-                <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
-                  <tr>
-                    <th scope="col" className="px-6 py-4">CUID</th>
-                    <th scope="col" className="px-6 py-4">Account Name</th>
-                    <th scope="col" className="px-6 py-4">Email Address</th>
-                    <th scope="col" className="px-6 py-4">Privilege Role</th>
-                    <th scope="col" className="px-6 py-4 text-center">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 bg-white text-slate-700 font-medium">
-                  {users.length > 0 ? (
-                    users.map((u) => (
-                      <tr key={u.id} className="hover:bg-slate-50/50 transition-colors">
-                        {/* ID */}
-                        <td className="px-6 py-4 font-mono text-[10px] text-slate-400">
-                          {u.id}
-                        </td>
-                        
-                        {/* Name */}
-                        <td className="px-6 py-4 text-slate-900 font-bold">
-                          {u.name}
-                        </td>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell isHeader>CUID</TableCell>
+                <TableCell isHeader>Account Name</TableCell>
+                <TableCell isHeader>Email Address</TableCell>
+                <TableCell isHeader>Privilege Role</TableCell>
+                <TableCell isHeader className="text-center">Status</TableCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.length > 0 ? (
+                users.map((u) => (
+                  <TableRow key={u.id}>
+                    {/* ID */}
+                    <TableCell className="font-mono text-[10px] text-slate-400">
+                      {u.id}
+                    </TableCell>
+                    
+                    {/* Name */}
+                    <TableCell className="text-slate-900 font-bold">
+                      {u.name}
+                    </TableCell>
 
-                        {/* Email */}
-                        <td className="px-6 py-4 text-slate-600 font-mono text-xs">
-                          {u.email}
-                        </td>
+                    {/* Email */}
+                    <TableCell className="text-slate-600 font-mono text-xs">
+                      {u.email}
+                    </TableCell>
 
-                        {/* Role Badge */}
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center text-[10px] font-extrabold tracking-wider px-2.5 py-1 rounded-full border uppercase ${
-                            u.role === "ADMIN" 
-                              ? "bg-purple-50 text-purple-700 border-purple-100" 
-                              : "bg-blue-50 text-blue-700 border-blue-100"
-                          }`}>
-                            {u.role}
-                          </span>
-                        </td>
+                    {/* Role Badge */}
+                    <TableCell>
+                      <Badge variant={u.role === "ADMIN" ? "purple" : "blue"}>
+                        {u.role}
+                      </Badge>
+                    </TableCell>
 
-                        {/* Status Icon */}
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center text-emerald-500">
-                            <CheckCircle2 className="h-4.5 w-4.5" />
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-slate-400 text-xs font-semibold">
-                        The User table is currently empty. Run the database seed script to populate default users.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                    {/* Status Icon */}
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center text-emerald-500">
+                        <CheckCircle2 className="h-4.5 w-4.5" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="py-12 text-center text-slate-400 text-xs font-semibold">
+                    The User table is currently empty. Run the database seed script to populate default users.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         )}
 
       </div>

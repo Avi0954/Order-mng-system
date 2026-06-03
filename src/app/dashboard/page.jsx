@@ -4,29 +4,46 @@ import Sidebar from "@/components/Sidebar";
 import PageHeader from "@/components/PageHeader";
 import DashboardCard from "@/components/DashboardCard";
 import { mockProducts } from "@/data/mockProducts";
-import { ShoppingBag, ClipboardList, Package, Layers, Activity, TrendingUp } from "lucide-react";
+import Table, { TableHeader, TableBody, TableRow, TableCell } from "@/components/ui/Table";
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import { 
+  ShoppingBag, 
+  ClipboardList, 
+  Clock, 
+  AlertTriangle, 
+  Activity, 
+  TrendingUp,
+  ArrowRight
+} from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardPage() {
   // Compute metrics dynamically from mock data
-  const totalProductTypes = mockProducts.length;
-  const totalStockItems = mockProducts.reduce((sum, item) => sum + item.stock, 0);
+  const totalProducts = mockProducts.length;
+  const lowStockCount = mockProducts.filter((item) => item.stock < 500).length;
   
   // Static mock stats for orders
   const totalOrders = 42;
   const pendingOrders = 8;
-  const inventoryValue = mockProducts.reduce((sum, item) => sum + (item.price * item.stock), 0);
 
-  // Format big numbers
   const formatNumber = (num) => {
     return num.toLocaleString("en-IN");
   };
+
+  const recentOrders = [
+    { id: "ORD-1024", customer: "Amit Kumar", items: "250g Basmati Rice", amount: "₹4,250.00", status: "PENDING", date: "10 mins ago" },
+    { id: "ORD-1023", customer: "Priya Sharma", items: "1,000mL Organic Milk", amount: "₹1,890.00", status: "APPROVED", date: "42 mins ago" },
+    { id: "ORD-1022", customer: "Rajesh Patel", items: "500g Whole Wheat Flour", amount: "₹850.00", status: "APPROVED", date: "2 hours ago" },
+    { id: "ORD-1021", customer: "Sneha Reddy", items: "10x Gel Ink Pens", amount: "₹12,400.00", status: "REJECTED", date: "5 hours ago" },
+    { id: "ORD-1020", customer: "Vikram Malhotra", items: "3x Hardcover Notebooks", amount: "₹3,150.00", status: "APPROVED", date: "1 day ago" }
+  ];
 
   const activities = [
     { id: 1, message: "Stock alert: 'Gel Ink Pen' is running low (500 items remaining)", time: "10 mins ago", type: "warning" },
     { id: 2, message: "Order #1024 placed for 250g Basmati Rice by Amit K.", time: "42 mins ago", type: "info" },
     { id: 3, message: "Order #1023 shipped to Priya S. (1,000mL Organic Milk)", time: "2 hours ago", type: "success" },
     { id: 4, message: "Product catalog updated: 'Mineral Water' stock refilled", time: "5 hours ago", type: "success" },
-    { id: 5, message: "System backup completed successfully", time: "1 day ago", type: "system" }
   ];
 
   return (
@@ -35,141 +52,138 @@ export default function DashboardPage() {
       <Sidebar />
 
       {/* Main Content Workspace */}
-      <main className="flex-grow p-6 md:p-8 bg-slate-50">
+      <main className="flex-grow p-6 md:p-8 bg-slate-50 space-y-8">
+        
+        {/* Top: Page Header */}
         <PageHeader
-          title="Operations Dashboard"
-          subtitle="Real-time commercial analytics, inventory counts, and processing queues."
+          title="Seller Dashboard"
+          subtitle="Real-time commercial analytics, order pipelines, and warehouse operations."
         />
 
-        {/* Dashboard Metrics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Middle: Statistics KPI Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <DashboardCard
-            title="Total Product Lines"
-            value={totalProductTypes}
+            title="Total Products"
+            value={totalProducts}
             icon={ShoppingBag}
-            trend="+2 added this week"
+            trend="Active catalog lines"
             trendType="positive"
           />
           <DashboardCard
-            title="Total Orders Booked"
+            title="Total Orders"
             value={totalOrders}
             icon={ClipboardList}
             trend="+15% vs last month"
             trendType="positive"
           />
           <DashboardCard
-            title="Total Stock Units"
-            value={formatNumber(totalStockItems)}
-            icon={Package}
-            trend="99.2% fulfillment rate"
-            trendType="positive"
+            title="Pending Orders"
+            value={pendingOrders}
+            icon={Clock}
+            trend="Needs authorization"
+            trendType="warning"
           />
           <DashboardCard
-            title="Inventory Valuation"
-            value={`₹${formatNumber(Math.round(inventoryValue))}`}
-            icon={Layers}
-            trend="Active catalog asset cost"
-            trendType="positive"
+            title="Low Stock Products"
+            value={lowStockCount}
+            icon={AlertTriangle}
+            trend="Below threshold limits"
+            trendType="danger"
           />
         </div>
 
-        {/* Bottom Section Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Quick Analytics Summary */}
-          <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 text-lg flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5 text-indigo-500" />
-                <span>Inventory Distribution & Category Overview</span>
-              </h3>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm font-medium mb-1">
-                  <span className="text-slate-600">Groceries & Staples</span>
-                  <span className="text-slate-800 font-bold">670,000 g</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-indigo-600 h-2 rounded-full" style={{ width: "65%" }}></div>
-                </div>
-              </div>
-              
-              <div>
-                <div className="flex justify-between text-sm font-medium mb-1">
-                  <span className="text-slate-600">Beverages</span>
-                  <span className="text-slate-800 font-bold">25,400 units/g</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-purple-600 h-2 rounded-full" style={{ width: "20%" }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm font-medium mb-1">
-                  <span className="text-slate-600">Dairy Products</span>
-                  <span className="text-slate-800 font-bold">80,000 mL</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-cyan-500 h-2 rounded-full" style={{ width: "12%" }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm font-medium mb-1">
-                  <span className="text-slate-600">Stationery</span>
-                  <span className="text-slate-800 font-bold">620 items</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2">
-                  <div className="bg-amber-500 h-2 rounded-full" style={{ width: "3%" }}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Operations Log */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-              <h3 className="font-bold text-slate-800 text-lg flex items-center space-x-2">
-                <Activity className="h-5 w-5 text-indigo-500" />
-                <span>Live Event Logs</span>
-              </h3>
-              <span className="h-2 w-2 rounded-full bg-indigo-500 animate-ping" />
+        {/* Bottom: Layout Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          
+          {/* Recent Orders Section */}
+          <div className="xl:col-span-2 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-extrabold text-slate-900 tracking-tight uppercase">
+                Recent Customer Orders
+              </h2>
+              <Link 
+                href="/orders" 
+                className="inline-flex items-center space-x-1 text-xs font-bold text-indigo-600 hover:text-indigo-500 transition-colors"
+              >
+                <span>View all orders</span>
+                <ArrowRight className="h-3 w-3" />
+              </Link>
             </div>
 
-            <div className="flow-root">
-              <ul className="-mb-8">
-                {activities.map((act, actIdx) => (
-                  <li key={act.id}>
-                    <div className="relative pb-6">
-                      {actIdx !== activities.length - 1 ? (
-                        <span className="absolute top-4 left-4 -ml-px h-full w-0.5 bg-slate-200" aria-hidden="true" />
-                      ) : null}
-                      <div className="relative flex space-x-3">
-                        <div>
-                          <span className={`h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white ${
-                            act.type === "warning" ? "bg-rose-50 text-rose-500" :
-                            act.type === "success" ? "bg-emerald-50 text-emerald-500" :
-                            act.type === "info" ? "bg-blue-50 text-blue-500" : "bg-slate-100 text-slate-500"
-                          }`}>
-                            <span className="text-[10px] font-bold">LOG</span>
-                          </span>
-                        </div>
-                        <div className="flex-1 min-w-0 pt-1.5 flex justify-between space-x-4">
-                          <div>
-                            <p className="text-xs text-slate-700">{act.message}</p>
-                          </div>
-                          <div className="text-right text-[10px] whitespace-nowrap text-slate-400">
-                            <time>{act.time}</time>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableCell isHeader>ID</TableCell>
+                  <TableCell isHeader>Customer</TableCell>
+                  <TableCell isHeader>Items</TableCell>
+                  <TableCell isHeader>Amount</TableCell>
+                  <TableCell isHeader>Status</TableCell>
+                  <TableCell isHeader className="text-right">Placed</TableCell>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {recentOrders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-mono text-xs text-slate-500 font-semibold">
+                      {order.id}
+                    </TableCell>
+                    <TableCell className="font-bold text-slate-800">
+                      {order.customer}
+                    </TableCell>
+                    <TableCell className="text-slate-600 text-xs">
+                      {order.items}
+                    </TableCell>
+                    <TableCell className="font-extrabold text-slate-900">
+                      {order.amount}
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant={
+                          order.status === "APPROVED" ? "success" : 
+                          order.status === "PENDING" ? "warning" : "danger"
+                        }
+                      >
+                        {order.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right text-xs text-slate-400 font-semibold">
+                      {order.date}
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </ul>
-            </div>
+              </TableBody>
+            </Table>
           </div>
+
+          {/* Side Logs / Event Log Panel */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-extrabold text-slate-900 tracking-tight uppercase">
+              Live Operations Log
+            </h2>
+            
+            <Card className="divide-y divide-slate-100">
+              {activities.map((act) => (
+                <div key={act.id} className="p-4 hover:bg-slate-50/50 transition-colors flex items-start space-x-3">
+                  <div className={`mt-0.5 p-1.5 rounded-lg border ${
+                    act.type === "warning" ? "bg-rose-50 text-rose-600 border-rose-100" :
+                    act.type === "success" ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
+                    "bg-blue-50 text-blue-600 border-blue-100"
+                  }`}>
+                    <Activity className="h-4 w-4 shrink-0" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      {act.message}
+                    </p>
+                    <p className="text-[10px] text-slate-400 font-bold">
+                      {act.time}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </Card>
+          </div>
+
         </div>
       </main>
     </div>

@@ -1,16 +1,13 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// User Model
 model User {
   id        String   @id @default(cuid())
   name      String
@@ -21,23 +18,21 @@ model User {
   orders    Order[]
 }
 
-// Product Model
 model Product {
   id                    Int                    @id @default(autoincrement())
   name                  String
   sku                   String                 @unique
   description           String?
-  baseUnit              String                 // e.g., 'g', 'mL', 'item'
+  baseUnit              String
   pricePerBaseUnit      Decimal                @db.Decimal(12, 4)
   stockQuantity         Decimal                @db.Decimal(12, 4)
-  lowStockThreshold     Decimal                @db.Decimal(12, 4) @default(100.0000)
+  lowStockThreshold     Decimal                @default(100.0000) @db.Decimal(12, 4)
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
-  orderItems            OrderItem[]
   inventoryTransactions InventoryTransaction[]
+  orderItems            OrderItem[]
 }
 
-// Order Model
 model Order {
   id          Int         @id @default(autoincrement())
   userId      String
@@ -48,21 +43,28 @@ model Order {
   orderItems  OrderItem[]
 }
 
-// OrderItem Model
 model OrderItem {
-  id              Int      @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   orderId         Int
   productId       Int
-  orderedQuantity Decimal  @db.Decimal(12, 4)
-  orderedUnit     String   // e.g., 'kg', 'L', 'item'
-  baseQuantity    Decimal  @db.Decimal(12, 4) // quantity in baseUnit (e.g. 1kg -> 1000g)
-  unitPrice       Decimal  @db.Decimal(12, 4) // unit price copy at order time
-  lineTotal       Decimal  @db.Decimal(12, 2)
-  order           Order    @relation(fields: [orderId], references: [id])
-  product         Product  @relation(fields: [productId], references: [id])
+  orderedQuantity Decimal @db.Decimal(12, 4)
+  orderedUnit     String
+  baseQuantity    Decimal @db.Decimal(12, 4)
+  unitPrice       Decimal @db.Decimal(12, 4)
+  lineTotal       Decimal @db.Decimal(12, 2)
+  order           Order   @relation(fields: [orderId], references: [id])
+  product         Product @relation(fields: [productId], references: [id])
 }
 
-// Enums
+model InventoryTransaction {
+  id              Int                 @id @default(autoincrement())
+  productId       Int
+  quantityChanged Decimal             @db.Decimal(12, 4)
+  actionType      InventoryActionType
+  createdAt       DateTime            @default(now())
+  product         Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
 enum Role {
   ADMIN
   SELLER
@@ -79,13 +81,4 @@ enum InventoryActionType {
   PRODUCT_CREATED
   PRODUCT_UPDATED
   MANUAL_ADJUSTMENT
-}
-
-model InventoryTransaction {
-  id              Int                 @id @default(autoincrement())
-  productId       Int
-  product         Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
-  quantityChanged Decimal             @db.Decimal(12, 4)
-  actionType      InventoryActionType
-  createdAt       DateTime            @default(now())
 }
