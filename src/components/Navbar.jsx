@@ -15,7 +15,7 @@ export default function Navbar() {
   const userRole = session?.user?.role;
   const userName = session?.user?.name || "User";
 
-  // Build the dynamic nav links array
+  // Build the dynamic nav links array in Title Case
   const navLinks = [
     { name: "Home", href: "/", icon: Home, show: true },
   ];
@@ -104,7 +104,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Middle: Navigation Items */}
+        {/* Middle: Navigation Items in Title Case with Linear-inspired active state */}
         <nav className="flex-1 py-6 space-y-1 overflow-y-auto">
           {visibleLinks.map((link) => {
             const Icon = link.icon;
@@ -114,9 +114,9 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`group flex items-center space-x-3.5 px-6 py-3.5 text-xs font-extrabold uppercase tracking-widest transition-all duration-200 border-l-2 ${
+                className={`group flex items-center space-x-3.5 px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-200 border-l-[3px] ${
                   isActive
-                    ? "bg-[#6D5DFB]/10 text-white border-[#6D5DFB] shadow-inner shadow-[#6D5DFB]/5"
+                    ? "bg-[#6D5DFB]/5 text-white border-[#6D5DFB] shadow-inner shadow-[#6D5DFB]/2"
                     : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/40 border-transparent"
                 }`}
               >
@@ -136,7 +136,7 @@ export default function Navbar() {
               {/* Profile details */}
               <div className="flex items-center space-x-3">
                 {/* Avatar */}
-                <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-[#6D5DFB] to-[#38BDF8] flex items-center justify-center text-xs font-black text-white shadow-md shadow-[#6D5DFB]/20 shrink-0">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-[#6D5DFB] to-[#38BDF8] flex items-center justify-center text-sm font-black text-white shadow-md shadow-[#6D5DFB]/20 shrink-0">
                   {getInitials(userName)}
                 </div>
                 {/* Text credentials */}
@@ -144,14 +144,17 @@ export default function Navbar() {
                   <p className="text-xs font-extrabold text-slate-200 truncate leading-snug">
                     {userName}
                   </p>
-                  <div className="mt-1">
-                    <span className={`inline-flex items-center text-[8px] font-black tracking-widest px-2 py-0.5 rounded-full border uppercase ${
-                      userRole === "ADMIN" 
-                        ? "bg-purple-950/40 text-purple-400 border-purple-900/40" 
-                        : "bg-blue-950/40 text-blue-400 border-blue-900/40"
-                    }`}>
-                      {userRole}
-                    </span>
+                  <div className="flex flex-col space-y-0.5 mt-1">
+                    <div>
+                      <span className={`inline-flex items-center text-[8px] font-black tracking-widest px-2 py-0.5 rounded-full border uppercase ${
+                        userRole === "ADMIN" 
+                          ? "bg-purple-950/40 text-purple-400 border-purple-900/40" 
+                          : "bg-blue-950/40 text-blue-400 border-blue-900/40"
+                      }`}>
+                        {userRole === "ADMIN" ? "Admin" : "Seller"}
+                      </span>
+                    </div>
+                    <p className="text-[9px] text-slate-500 font-medium">Last Active Today</p>
                   </div>
                 </div>
               </div>
