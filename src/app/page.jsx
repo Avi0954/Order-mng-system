@@ -34,33 +34,33 @@ export default function HomePage() {
 
   const features = [
     {
-      title: "Product Management",
-      description: "Define custom SKUs, pricing structures, and configure custom base units (g, kg, mL, L, items) effortlessly.",
+      title: "Custom Product Management",
+      description: "Create SKUs, configure pricing, and manage unit-based inventory.",
       icon: Package,
     },
     {
       title: "Inventory Tracking",
-      description: "Get real-time logging, low-stock thresholds alerts, and automated stock subtraction upon checkout.",
+      description: "Monitor stock levels, receive alerts, and automate stock updates.",
       icon: Layers,
     },
     {
-      title: "Quotation System",
-      description: "Convert weights and volumes on-the-fly and generate client quotations with calculated price summaries.",
+      title: "Quotation Engine",
+      description: "Generate quotations with automatic unit conversion and pricing.",
       icon: FileCheck,
     },
     {
       title: "Order Management",
-      description: "Coordinate pending, approved, and rejected orders with instant transactional stock deductions.",
+      description: "Track pending, approved, and completed customer orders.",
       icon: ClipboardList,
     },
     {
-      title: "Reports & Analytics",
-      description: "Visualize operations data, inventory asset valuations, and track weekly dispatch frequencies.",
+      title: "Analytics & Reports",
+      description: "Monitor business performance with operational insights.",
       icon: BarChart,
     },
     {
       title: "Role-Based Access",
-      description: "Enforce strict Admin and Seller roles protecting backend actions, products editing, and order queues.",
+      description: "Secure Admin and Seller permissions across the platform.",
       icon: Lock,
     }
   ];
@@ -229,22 +229,28 @@ export default function HomePage() {
           {features.map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <Card 
+              <div 
                 key={idx} 
-                className="group hover:-translate-y-1 hover:border-[#6D5DFB]/30 hover:shadow-lg hover:shadow-[#6D5DFB]/5 transition-all duration-300 border-slate-900/60 bg-slate-950/30"
+                className="group h-[250px] bg-white border border-slate-200/80 p-8 rounded-3xl shadow-sm hover:shadow-xl hover:translate-y-[-6px] transition-all duration-300 flex flex-col justify-between relative overflow-hidden select-none"
               >
                 <div className="space-y-4">
-                  <div className="p-3 bg-[#6D5DFB]/10 text-[#38BDF8] border border-[#6D5DFB]/20 rounded-2xl w-fit group-hover:scale-105 transition-transform duration-300">
-                    <Icon className="h-5 w-5 shrink-0" />
+                  {/* Icon section */}
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100/50 flex items-center justify-center text-[#6D5DFB] shrink-0 shadow-xs border border-indigo-100/40">
+                    <Icon className="h-6 w-6 shrink-0" />
                   </div>
-                  <h3 className="text-base font-extrabold text-white group-hover:text-[#38BDF8] transition-colors duration-200">
+                  {/* Typography */}
+                  <h3 className="text-xl font-semibold text-slate-900 leading-snug">
                     {feature.title}
                   </h3>
-                  <p className="text-xs text-[#94A3B8] leading-relaxed font-medium">
+                  <p className="text-sm text-gray-500 max-w-[90%] leading-relaxed font-medium">
                     {feature.description}
                   </p>
                 </div>
-              </Card>
+                {/* Accent CTA visible on hover */}
+                <div className="text-sm font-semibold text-[#6D5DFB] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Learn More &rarr;
+                </div>
+              </div>
             );
           })}
         </div>
