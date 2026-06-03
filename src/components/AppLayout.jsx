@@ -21,7 +21,7 @@ export default function AppLayout({ children }) {
       <Navbar />
 
       {/* Main Content Workspace */}
-      <div className="flex flex-col flex-1 w-full md:pl-[280px] pt-16 md:pt-0 min-w-0 transition-all duration-300">
+      <div className="flex flex-col flex-1 w-full md:pl-[240px] pt-16 md:pt-0 min-w-0 transition-all duration-300">
         <main className="flex-grow flex flex-col min-h-screen bg-[#050816]">
           {children}
         </main>

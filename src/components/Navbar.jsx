@@ -38,6 +38,16 @@ export default function Navbar() {
   // Filter links that are permitted
   const visibleLinks = navLinks.filter(link => link.show);
 
+  // Helper to get initials for avatar
+  const getInitials = (name) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
+
   return (
     <>
       {/* Mobile Top Header (Visible only on mobile/tablet) */}
@@ -69,7 +79,7 @@ export default function Navbar() {
 
       {/* Fixed Left Sidebar Container */}
       <aside 
-        className={`fixed top-0 bottom-0 left-0 z-50 w-[280px] bg-[#090d23] border-r border-slate-900/60 flex flex-col justify-between transform transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-[240px] bg-[#090d23] border-r border-slate-900/60 flex flex-col justify-between transform transition-transform duration-300 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -78,9 +88,9 @@ export default function Navbar() {
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2.5 group" onClick={() => setIsOpen(false)}>
               <div className="bg-indigo-600/10 p-2 rounded-xl border border-indigo-500/20 group-hover:bg-indigo-600/20 group-hover:border-indigo-500/30 transition-all duration-300">
-                <Box className="h-5 w-5 text-indigo-400 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
+                <Box className="h-5 w-5 text-[#6D5DFB] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
               </div>
-              <span className="font-black text-lg tracking-tight bg-gradient-to-r from-indigo-400 via-indigo-200 to-cyan-300 bg-clip-text text-transparent">
+              <span className="font-black text-lg tracking-tight bg-gradient-to-r from-[#6D5DFB] via-indigo-200 to-[#38BDF8] bg-clip-text text-transparent">
                 InventoryMS
               </span>
             </Link>
@@ -95,7 +105,7 @@ export default function Navbar() {
         </div>
 
         {/* Middle: Navigation Items */}
-        <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 py-6 space-y-1 overflow-y-auto">
           {visibleLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
@@ -104,45 +114,59 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center space-x-3.5 px-4 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all duration-200 border ${
+                className={`group flex items-center space-x-3.5 px-6 py-3.5 text-xs font-extrabold uppercase tracking-widest transition-all duration-200 border-l-2 ${
                   isActive
-                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20 border-indigo-500/20"
-                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900 border-transparent"
+                    ? "bg-[#6D5DFB]/10 text-white border-[#6D5DFB] shadow-inner shadow-[#6D5DFB]/5"
+                    : "text-slate-400 hover:text-slate-100 hover:bg-slate-900/40 border-transparent"
                 }`}
               >
-                <Icon className={`h-4.5 w-4.5 shrink-0 transition-transform duration-200 ${isActive ? "scale-110" : ""}`} />
+                <Icon className={`h-4.5 w-4.5 shrink-0 transition-all duration-200 ${
+                  isActive ? "text-[#6D5DFB] scale-110" : "text-slate-500 group-hover:text-slate-300"
+                }`} />
                 <span>{link.name}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* Bottom: User Info & Logout actions */}
+        {/* Bottom: Redesigned Profile Card */}
         <div className="p-4 border-t border-slate-900/60 bg-slate-950/20">
           {isAuthenticated ? (
-            <div className="flex items-center justify-between bg-slate-900/40 p-3 rounded-2xl border border-slate-900/60">
-              <div className="space-y-1.5 min-w-0">
-                <span className={`inline-flex items-center text-[8px] font-black tracking-widest px-2 py-0.5 rounded-full border uppercase ${
-                  userRole === "ADMIN" 
-                    ? "bg-purple-950/40 text-purple-400 border-purple-900/40" 
-                    : "bg-blue-950/40 text-blue-400 border-blue-900/40"
-                }`}>
-                  {userRole}
-                </span>
-                <p className="text-xs font-extrabold text-slate-200 truncate pr-1">
-                  {userName}
-                </p>
+            <div className="flex flex-col space-y-3 bg-[#0c1130] p-4 rounded-2xl border border-slate-900/80 shadow-lg">
+              {/* Profile details */}
+              <div className="flex items-center space-x-3">
+                {/* Avatar */}
+                <div className="h-9 w-9 rounded-full bg-gradient-to-tr from-[#6D5DFB] to-[#38BDF8] flex items-center justify-center text-xs font-black text-white shadow-md shadow-[#6D5DFB]/20 shrink-0">
+                  {getInitials(userName)}
+                </div>
+                {/* Text credentials */}
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-extrabold text-slate-200 truncate leading-snug">
+                    {userName}
+                  </p>
+                  <div className="mt-1">
+                    <span className={`inline-flex items-center text-[8px] font-black tracking-widest px-2 py-0.5 rounded-full border uppercase ${
+                      userRole === "ADMIN" 
+                        ? "bg-purple-950/40 text-purple-400 border-purple-900/40" 
+                        : "bg-blue-950/40 text-blue-400 border-blue-900/40"
+                    }`}>
+                      {userRole}
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              {/* Signout Button */}
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="p-2.5 bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-900/50 rounded-xl transition-all duration-200 cursor-pointer shrink-0"
-                title="Sign out of System"
+                className="w-full flex items-center justify-center space-x-2 py-2 bg-slate-900/60 hover:bg-rose-950/30 text-slate-400 hover:text-rose-400 border border-slate-800 hover:border-rose-900/40 rounded-xl text-[10px] font-extrabold uppercase tracking-widest transition-all duration-200 cursor-pointer"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Logout</span>
               </button>
             </div>
           ) : (
-            <div className="text-center p-2 text-xs text-slate-500 font-bold uppercase tracking-wider">
+            <div className="text-center p-2 text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
               Guest Portal
             </div>
           )}
