@@ -9,22 +9,25 @@ export const dynamic = "force-dynamic";
 
 export default async function OrderDetailsPage({ params }) {
   const session = await getSession();
-  if (!session) {
-    redirect("/login");
-  }
+  // Removed forced login redirect
 
   // Await the dynamic URL parameters
   const { id } = await params;
 
   let order;
-  try {
-    order = await getOrderById(id);
-  } catch (err) {
-    console.error(err);
-    redirect("/orders");
+  if (session) {
+    try {
+      order = await getOrderById(id);
+    } catch (err) {
+      console.error(err);
+      redirect("/orders");
+    }
   }
 
   if (!order) {
+    if (!session) {
+      redirect("/orders");
+    }
     notFound();
   }
 

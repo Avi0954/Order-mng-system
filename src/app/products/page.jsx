@@ -6,11 +6,7 @@ import ProductsCatalogClient from "./products-catalog-client";
 export const dynamic = "force-dynamic";
 
 export default async function ProductsCatalogPage() {
-  // Ensure user is authenticated
-  const session = await getSession();
-  if (!session) {
-    redirect("/login");
-  }
+  // Publicly accessible page
 
   // Load all products from PostgreSQL database
   const products = await getProducts();

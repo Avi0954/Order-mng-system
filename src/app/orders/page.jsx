@@ -9,12 +9,15 @@ export const dynamic = "force-dynamic";
 
 export default async function OrderHistoryPage() {
   const session = await getSession();
-  if (!session) {
-    redirect("/login");
+  // Load orders for current seller if authenticated
+  let orders = [];
+  if (session) {
+    try {
+      orders = await getOrders();
+    } catch (e) {
+      console.error(e);
+    }
   }
-
-  // Load orders for current seller
-  const orders = await getOrders();
 
   const getStatusBadgeClass = (status) => {
     switch (status) {

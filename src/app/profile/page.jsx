@@ -9,12 +9,14 @@ export const dynamic = "force-dynamic";
 export default async function ProfilePage() {
   const session = await getSession();
 
-  // Safeguard if not authenticated
-  if (!session) {
-    redirect("/login");
-  }
+  // Setup demo user fallback if not authenticated
+  const user = session?.user || {
+    name: "Demo Seller",
+    email: "demo@seller.com",
+    role: "SELLER"
+  };
 
-  const { name, email, role } = session.user;
+  const { name, email, role } = user;
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">

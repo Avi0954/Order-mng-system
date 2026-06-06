@@ -23,15 +23,18 @@ export default function Navbar() {
   if (isAuthenticated) {
     navLinks.push(
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, show: true },
-      { name: "Products", href: "/products", icon: ShoppingBag, show: true },
-      { name: "Quotation", href: "/quotation", icon: FileCheck, show: true },
-      { name: "Orders", href: "/orders", icon: ClipboardList, show: true },
+      { name: "Browse Products", href: "/products", icon: ShoppingBag, show: true },
+      { name: "Generate Quotation", href: "/quotation", icon: FileCheck, show: true },
+      { name: "View Orders", href: "/orders", icon: ClipboardList, show: true },
       { name: "Profile", href: "/profile", icon: User, show: true },
-      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: true }
+      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: userRole === "ADMIN" }
     );
   } else {
     navLinks.push(
-      { name: "Admin Portal", href: "/admin", icon: ShieldCheck, show: true },
+      { name: "Browse Products", href: "/products", icon: ShoppingBag, show: true },
+      { name: "Generate Quotation", href: "/quotation", icon: FileCheck, show: true },
+      { name: "View Orders", href: "/orders", icon: ClipboardList, show: true },
+      { name: "Profile", href: "/profile", icon: User, show: true },
       { name: "Login", href: "/login", icon: LogIn, show: true }
     );
   }
@@ -170,8 +173,9 @@ export default function Navbar() {
               </button>
             </div>
           ) : (
-            <div className="text-center p-2 text-[10px] text-slate-500 font-extrabold uppercase tracking-widest">
-              Guest Portal
+            <div className="flex flex-col space-y-1.5 bg-amber-950/20 p-4.5 rounded-2xl border border-amber-900/40 text-center shadow-lg">
+              <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest">Demo Mode Active</span>
+              <p className="text-[9px] text-slate-400 font-medium leading-relaxed">Seller features publicly accessible</p>
             </div>
           )}
         </div>

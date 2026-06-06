@@ -9,11 +9,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function ProductDetailsPage({ params }) {
-  // Enforce session check
-  const session = await getSession();
-  if (!session) {
-    redirect("/login");
-  }
+  // Removed session check to allow public access
 
   // Await the dynamic parameters
   const { id } = await params;
@@ -23,7 +19,7 @@ export default async function ProductDetailsPage({ params }) {
     notFound();
   }
 
-  const isUserAdmin = session.user.role === "ADMIN";
+  const isUserAdmin = session?.user?.role === "ADMIN";
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
