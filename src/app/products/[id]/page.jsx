@@ -19,6 +19,7 @@ export default async function ProductDetailsPage({ params }) {
     notFound();
   }
 
+  const session = await getSession();
   const isUserAdmin = session?.user?.role === "ADMIN";
 
   return (

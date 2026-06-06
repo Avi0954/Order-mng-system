@@ -306,3 +306,79 @@ export async function updateOrderStatus(orderId, status) {
     return { success: false, error: error.message || "Failed to update order status." };
   }
 }
+
+/**
+ * Calculate order pricing safely on the server.
+ */
+export async function calculateOrderPricing(productId, quantity, unit) {
+  try {
+    const parsedId = parseInt(productId, 10);
+    if (isNaN(parsedId)) {
+      return { success: false, error: "Invalid product ID format." };
+    }
+
+    const qtyVal = parseFloat(quantity);
+    if (isNaN(qtyVal) || qtyVal <= 0) {
+      return { success: false, error: "Invalid quantity provided." };
+    }
+
+    const validUnits = ["g", "kg", "mL", "L", "item"];
+    if (!unit || !validUnits.includes(unit)) {
+      return { success: false, error: "Invalid unit provided." };
+    }
+
+    // FIX 1: Product Validation
+    const product = await prisma.product.findUnique({
+      where: { id: parsedId }
+    });
+
+    if (!product) {
+      return { success: false, error: "Product not found" };
+    }
+
+    if (product.pricePerBaseUnit === null || product.pricePerBaseUnit === undefined) {
+      return { success: false, error: "Product pricing is not configured." };
+    }
+
+    if (!product.baseUnit) {
+      return { success: false, error: "Product base unit is missing." };
+    }
+
+    // FIX 6: Database Safety
+    const currentStock = Number(product.stockQuantity);
+    if (isNaN(currentStock) || product.stockQuantity === null) {
+      return { success: false, error: "Product stock information is missing." };
+    }
+
+    // FIX 3: Unit Conversion validation
+    let convertedBaseQuantity = 0;
+    try {
+      convertedBaseQuantity = convertToBaseUnit(qtyVal, unit, product.baseUnit);
+    } catch (err) {
+      return { success: false, error: "Invalid unit conversion: " + err.message };
+    }
+
+    // FIX 2: Decimal Calculations
+    const pricePerBase = Number(product.pricePerBaseUnit);
+    if (isNaN(pricePerBase)) {
+      return { success: false, error: "Invalid price format in database." };
+    }
+
+    const lineTotal = convertedBaseQuantity * pricePerBase;
+
+    // FIX 8: Response Format
+    return {
+      success: true,
+      calculatedQuantity: qtyVal,
+      convertedBaseQuantity: convertedBaseQuantity,
+      unitPrice: pricePerBase,
+      lineTotal: lineTotal,
+      error: null
+    };
+
+  } catch (error) {
+    // FIX 5: Server action error handling
+    console.error("Pricing Error:", error);
+    return { success: false, error: "Failed to calculate order pricing due to a server error." };
+  }
+}
